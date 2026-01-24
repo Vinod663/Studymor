@@ -1,26 +1,31 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
+import { auth } from "../src/config/firebaseConfig";
 
-export default function LoginScreen({ navigation }: any) {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
   const handleAuth = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
+    }
+
     setLoading(true);
     try {
       if (isRegistering) {
         // Register new user
         await createUserWithEmailAndPassword(auth, email, password);
-        Alert.alert("Success", "Account created! You can now log in.");
+        Alert.alert("Success", "Account created! Logging you in...");
       } else {
         // Login existing user
         await signInWithEmailAndPassword(auth, email, password);
-        // We will navigate to Dashboard later
       }
+      
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
@@ -40,6 +45,7 @@ export default function LoginScreen({ navigation }: any) {
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
+        keyboardType="email-address"
       />
       <TextInput
         className="w-full bg-white p-4 rounded-xl mb-6 border border-gray-200"
@@ -53,6 +59,7 @@ export default function LoginScreen({ navigation }: any) {
       <TouchableOpacity
         onPress={handleAuth}
         className="w-full bg-blue-600 p-4 rounded-xl items-center"
+        disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />

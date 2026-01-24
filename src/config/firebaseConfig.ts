@@ -1,4 +1,3 @@
-// src/config/firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -14,6 +13,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// We use the standard auth for now to avoid the Type Error
 export const auth = getAuth(app);
 export const db = getFirestore(app);
