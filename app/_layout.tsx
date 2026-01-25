@@ -18,15 +18,11 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (user === undefined) return; // Still loading
-
+    if (user === undefined) return;
     const inTabsGroup = segments[0] === "(tabs)";
-
     if (user && !inTabsGroup) {
-      // User is logged in -> Go to Dashboard
       router.replace("/dashboard" as any);
     } else if (!user && inTabsGroup) {
-      // User is NOT logged in -> Go to Login
       router.replace("/" as any);
     }
   }, [user, segments]);

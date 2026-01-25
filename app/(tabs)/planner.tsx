@@ -5,11 +5,12 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 import { db, auth } from "../../src/config/firebaseConfig";
 import { collection, addDoc, query, where, onSnapshot, orderBy, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
+// REMOVED: import * as Notifications from "expo-notifications"; 
 
 interface Session {
   id: string;
   subjectName: string;
-  date: any; // Firestore Timestamp
+  date: any; 
 }
 
 interface Subject {
@@ -29,7 +30,6 @@ export default function PlannerScreen() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
 
-  // 1. Load Data
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -39,7 +39,6 @@ export default function PlannerScreen() {
       setSubjects(snap.docs.map(d => ({ id: d.id, name: d.data().name })));
     });
 
-    // Order by Date Ascending (Oldest/Expired first, then Upcoming)
     const sessQ = query(
       collection(db, "sessions"), 
       where("userId", "==", user.uid),
@@ -56,7 +55,6 @@ export default function PlannerScreen() {
     return () => { unsubSub(); unsubSess(); };
   }, []);
 
-  // 2. Date Picker Logic (Reused for Create AND Update)
   const showDatepicker = (currentValue: Date, isUpdate: boolean = false) => {
     if (Platform.OS === 'android') {
       DateTimePickerAndroid.open({
@@ -73,10 +71,8 @@ export default function PlannerScreen() {
                    finalDate.setMinutes(selectedTime.getMinutes());
                    
                    if (isUpdate && selectedSession) {
-                     // If updating, save immediately
                      await updateSessionDate(selectedSession.id, finalDate);
                    } else {
-                     // If creating, just set state
                      setDate(finalDate);
                    }
                  }
@@ -90,16 +86,21 @@ export default function PlannerScreen() {
         is24Hour: true,
       });
     } else {
-      setShowPickerIOS(true); // iOS logic requires separate handling for updates, keeping simple for now
+      setShowPickerIOS(true);
     }
   };
 
-  // 3. CRUD Operations
   const handleSchedule = async () => {
     if (!selectedSubject) {
       Alert.alert("Error", "Please select a subject first!");
       return;
     }
+
+    if (date < new Date()) {
+       Alert.alert("Error", "You cannot schedule a session in the past!");
+       return;
+    }
+
     try {
       await addDoc(collection(db, "sessions"), {
         userId: auth.currentUser?.uid,
@@ -108,6 +109,9 @@ export default function PlannerScreen() {
         date: date,
         completed: false
       });
+
+      // REMOVED: Notification scheduling to prevent crash
+      
       Alert.alert("Success", "Session Scheduled!");
       setSelectedSubject(null);
     } catch (error) {
@@ -134,7 +138,6 @@ export default function PlannerScreen() {
     }
   };
 
-  // Helper to check expiry
   const isExpired = (sessionDate: any) => {
     const now = new Date();
     const sDate = new Date(sessionDate.seconds * 1000);
@@ -145,7 +148,6 @@ export default function PlannerScreen() {
     <SafeAreaView className="flex-1 bg-gray-50 p-4">
       <Text className="text-2xl font-bold text-gray-800 mb-6">Study Planner</Text>
 
-      {/* --- CREATE NEW SESSION --- */}
       <View className="bg-white p-4 rounded-2xl shadow-sm mb-6">
         <Text className="text-gray-500 font-bold mb-2">SCHEDULE NEW SESSION</Text>
         
@@ -166,12 +168,23 @@ export default function PlannerScreen() {
           <Ionicons name="calendar-outline" size={20} color="gray" />
         </TouchableOpacity>
 
+        {showPickerIOS && (
+          <DateTimePicker 
+            value={date}
+            mode="datetime"
+            display="default"
+            onChange={(event, selectedDate) => {
+              setShowPickerIOS(false);
+              if (selectedDate) setDate(selectedDate);
+            }}
+          />
+        )}
+
         <TouchableOpacity onPress={handleSchedule} className="bg-blue-600 p-4 rounded-xl items-center">
           <Text className="text-white font-bold text-lg">Schedule Session</Text>
         </TouchableOpacity>
       </View>
 
-      {/* --- SESSION LIST --- */}
       <Text className="text-xl font-bold text-gray-800 mb-4">Your Schedule</Text>
       <FlatList 
         data={sessions}
@@ -204,7 +217,6 @@ export default function PlannerScreen() {
         }}
       />
 
-      {/* --- SUBJECT SELECTION MODAL --- */}
       <Modal visible={subjectModalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-end bg-black/50">
           <View className="bg-white p-6 rounded-t-3xl h-1/2">
@@ -228,7 +240,6 @@ export default function PlannerScreen() {
         </View>
       </Modal>
 
-      {/* --- EDIT/DELETE MODAL --- */}
       <Modal visible={editModalVisible} animationType="fade" transparent>
         <View className="flex-1 justify-center items-center bg-black/50 p-4">
           <View className="bg-white p-6 rounded-2xl w-full max-w-sm">
@@ -237,10 +248,8 @@ export default function PlannerScreen() {
               {selectedSession?.subjectName}
             </Text>
 
-            {/* Reschedule Button */}
             <TouchableOpacity 
               onPress={() => {
-                // Open Date Picker in "Update Mode"
                 if (selectedSession) {
                    showDatepicker(new Date(selectedSession.date.seconds * 1000), true);
                 }
@@ -250,7 +259,6 @@ export default function PlannerScreen() {
               <Text className="text-white text-center font-bold">Reschedule Time</Text>
             </TouchableOpacity>
 
-            {/* Delete Button */}
             <TouchableOpacity 
               onPress={() => selectedSession && deleteSession(selectedSession.id)}
               className="bg-red-100 p-4 rounded-xl mb-3"
@@ -258,7 +266,6 @@ export default function PlannerScreen() {
               <Text className="text-red-600 text-center font-bold">Delete Session</Text>
             </TouchableOpacity>
 
-            {/* Cancel Button */}
             <TouchableOpacity onPress={() => setEditModalVisible(false)} className="p-4">
               <Text className="text-gray-500 text-center font-bold">Close</Text>
             </TouchableOpacity>
