@@ -5,7 +5,7 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 import { db, auth } from "../../src/config/firebaseConfig";
 import { collection, addDoc, query, where, onSnapshot, orderBy, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
-// REMOVED: import * as Notifications from "expo-notifications"; 
+
 
 interface Session {
   id: string;
@@ -110,7 +110,6 @@ export default function PlannerScreen() {
         completed: false
       });
 
-      // REMOVED: Notification scheduling to prevent crash
       
       Alert.alert("Success", "Session Scheduled!");
       setSelectedSubject(null);
