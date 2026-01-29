@@ -59,15 +59,15 @@ export default function SubjectsScreen() {
   };
 
   return (
-    // Wrap everything in SafeAreaView to avoid the notch
-    <SafeAreaView className="flex-1 bg-gray-50 p-4">
-      <Text className="text-2xl font-bold text-gray-800 mb-6 mt-2">My Subjects</Text>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900 p-4">
+      <Text className="text-2xl font-bold text-gray-800 dark:text-white mb-6 mt-2">My Subjects</Text>
 
       {/* Input Section */}
       <View className="flex-row gap-2 mb-6">
         <TextInput
-          className="flex-1 bg-white p-4 rounded-xl border border-gray-200"
+          className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-black dark:text-white"
           placeholder="New Subject..."
+          placeholderTextColor="#9ca3af"
           value={subjectName}
           onChangeText={setSubjectName}
         />
@@ -87,8 +87,8 @@ export default function SubjectsScreen() {
           data={subjects}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View className="flex-row justify-between items-center bg-white p-4 mb-3 rounded-xl shadow-sm border border-gray-100">
-              <Text className="text-lg text-gray-700">{item.name}</Text>
+            <View className="flex-row justify-between items-center bg-white dark:bg-gray-800 p-4 mb-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <Text className="text-lg text-gray-700 dark:text-gray-200">{item.name}</Text>
               <TouchableOpacity onPress={() => deleteSubject(item.id)}>
                 <Ionicons name="trash-outline" size={24} color="#ef4444" />
               </TouchableOpacity>

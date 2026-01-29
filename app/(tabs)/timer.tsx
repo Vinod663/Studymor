@@ -167,30 +167,33 @@ export default function TimerScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 p-6 justify-center items-center">
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900 p-6 justify-center items-center">
       
+      {/* SUBJECT BUTTON */}
       <TouchableOpacity 
         onPress={() => setSubjectModalVisible(true)}
-        className="bg-white px-6 py-3 rounded-full shadow-sm mb-4 border border-gray-100"
+        className="bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-sm mb-4 border border-gray-100 dark:border-gray-700"
       >
-        <Text className="text-lg text-blue-600 font-bold">
+        <Text className="text-lg text-blue-600 dark:text-blue-400 font-bold">
           {selectedSubject ? `Subject: ${selectedSubject.name}` : "Tap to Select Subject"}
         </Text>
       </TouchableOpacity>
 
+      {/* SOUND BUTTON */}
       <TouchableOpacity 
         onPress={() => setSoundModalVisible(true)}
-        className="flex-row items-center bg-gray-200 px-4 py-2 rounded-full mb-8"
+        className="flex-row items-center bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-full mb-8"
       >
         <Ionicons name="musical-notes" size={16} color="gray" />
-        <Text className="text-gray-600 font-bold ml-2">Sound: {selectedSound.name}</Text>
+        <Text className="text-gray-600 dark:text-gray-300 font-bold ml-2">Sound: {selectedSound.name}</Text>
       </TouchableOpacity>
 
+      {/* THE BIG TIMER */}
       <TouchableOpacity 
         onPress={() => setTimeModalVisible(true)} 
-        className="bg-white w-72 h-72 rounded-full justify-center items-center shadow-lg border-4 border-blue-100 mb-12"
+        className="bg-white dark:bg-gray-800 w-72 h-72 rounded-full justify-center items-center shadow-lg border-4 border-blue-100 dark:border-gray-700 mb-12"
       >
-        <Text className="text-6xl font-bold text-gray-800 tracking-widest">
+        <Text className="text-6xl font-bold text-gray-800 dark:text-white tracking-widest">
           {formatTime(timeLeft)}
         </Text>
         <Text className="text-gray-400 mt-2 font-medium">
@@ -198,6 +201,7 @@ export default function TimerScreen() {
         </Text>
       </TouchableOpacity>
 
+      {/* CONTROLS */}
       <View className="flex-row gap-6">
         <TouchableOpacity 
           onPress={toggleTimer}
@@ -208,51 +212,53 @@ export default function TimerScreen() {
 
         <TouchableOpacity 
           onPress={resetTimer}
-          className="bg-gray-200 w-20 h-20 rounded-full justify-center items-center"
+          className="bg-gray-200 dark:bg-gray-700 w-20 h-20 rounded-full justify-center items-center"
         >
           <Ionicons name="refresh" size={32} color="gray" />
         </TouchableOpacity>
       </View>
 
+      {/* --- SUBJECT MODAL --- */}
       <Modal visible={subjectModalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white p-6 rounded-t-3xl h-1/2">
-            <Text className="text-xl font-bold mb-4 text-center">Pick a Subject</Text>
+          <View className="bg-white dark:bg-gray-800 p-6 rounded-t-3xl h-1/2">
+            <Text className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">Pick a Subject</Text>
             <FlatList
               data={subjects}
               keyExtractor={i => i.id}
               renderItem={({ item }) => (
                 <TouchableOpacity 
-                  className="p-4 border-b border-gray-100"
+                  className="p-4 border-b border-gray-100 dark:border-gray-700"
                   onPress={() => { setSelectedSubject(item); setSubjectModalVisible(false); }}
                 >
-                  <Text className="text-lg text-center">{item.name}</Text>
+                  <Text className="text-lg text-center text-gray-800 dark:text-gray-200">{item.name}</Text>
                 </TouchableOpacity>
               )}
             />
-            <TouchableOpacity onPress={() => setSubjectModalVisible(false)} className="mt-4 bg-gray-200 p-4 rounded-xl">
-              <Text className="text-center font-bold">Cancel</Text>
+            <TouchableOpacity onPress={() => setSubjectModalVisible(false)} className="mt-4 bg-gray-200 dark:bg-gray-700 p-4 rounded-xl">
+              <Text className="text-center font-bold text-gray-800 dark:text-white">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
+      {/* --- SOUND MODAL --- */}
       <Modal visible={soundModalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white p-6 rounded-t-3xl h-1/2">
-            <Text className="text-xl font-bold mb-4 text-center">Choose Ringtone</Text>
+          <View className="bg-white dark:bg-gray-800 p-6 rounded-t-3xl h-1/2">
+            <Text className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">Choose Ringtone</Text>
             <FlatList
               data={RINGTONES}
               keyExtractor={i => i.id}
               renderItem={({ item }) => (
                 <TouchableOpacity 
-                  className={`p-4 border-b border-gray-100 flex-row justify-between items-center ${selectedSound.id === item.id ? "bg-blue-50" : ""}`}
+                  className={`p-4 border-b border-gray-100 dark:border-gray-700 flex-row justify-between items-center ${selectedSound.id === item.id ? "bg-blue-50 dark:bg-blue-900/20" : ""}`}
                   onPress={() => {
                      previewSound(item.uri);
                      setSelectedSound(item);
                   }}
                 >
-                  <Text className={`text-lg ${selectedSound.id === item.id ? "text-blue-600 font-bold" : "text-gray-700"}`}>
+                  <Text className={`text-lg ${selectedSound.id === item.id ? "text-blue-600 dark:text-blue-400 font-bold" : "text-gray-700 dark:text-gray-300"}`}>
                     {item.name}
                   </Text>
                   {selectedSound.id === item.id && <Ionicons name="checkmark" size={20} color="#2563eb" />}
@@ -272,13 +278,15 @@ export default function TimerScreen() {
         </View>
       </Modal>
 
+      {/* --- TIME SETTING MODAL --- */}
       <Modal visible={timeModalVisible} animationType="fade" transparent>
         <View className="flex-1 justify-center items-center bg-black/50 p-4">
-          <View className="bg-white p-6 rounded-2xl w-full max-w-sm">
-            <Text className="text-xl font-bold mb-4 text-center">Set Timer Duration</Text>
+          <View className="bg-white dark:bg-gray-800 p-6 rounded-2xl w-full max-w-sm">
+            <Text className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">Set Timer Duration</Text>
             <TextInput
-              className="bg-gray-100 p-4 rounded-xl text-center text-2xl font-bold mb-4"
+              className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl text-center text-2xl font-bold mb-4 text-gray-800 dark:text-white"
               placeholder="Enter minutes"
+              placeholderTextColor="#9ca3af"
               keyboardType="numeric"
               value={customMinutes}
               onChangeText={setCustomMinutes}
@@ -288,7 +296,7 @@ export default function TimerScreen() {
               <Text className="text-white text-center font-bold">Set Time</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setTimeModalVisible(false)} className="p-4">
-              <Text className="text-gray-500 text-center font-bold">Cancel</Text>
+              <Text className="text-gray-500 dark:text-gray-400 text-center font-bold">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>

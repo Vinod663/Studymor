@@ -13,8 +13,8 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 justify-center items-center bg-white">
-      <Text className="text-2xl font-bold mb-2 text-black">Welcome back,</Text>
+    <SafeAreaView className="flex-1 justify-center items-center bg-gray-50 dark:bg-gray-900">
+      <Text className="text-2xl font-bold mb-2 text-black dark:text-white">Welcome back,</Text>
       <Text className="text-xl text-blue-600 font-bold mb-8">{userName}!</Text>
       
       <Text className="text-gray-400">Select a tab below to start.</Text>

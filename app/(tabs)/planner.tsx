@@ -5,7 +5,7 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 import { db, auth } from "../../src/config/firebaseConfig";
 import { collection, addDoc, query, where, onSnapshot, orderBy, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
-
+import { useColorScheme } from "nativewind"; 
 
 interface Session {
   id: string;
@@ -29,6 +29,10 @@ export default function PlannerScreen() {
   const [subjectModalVisible, setSubjectModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+
+  // Hook for icon colors
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === "dark" ? "#9ca3af" : "gray"; // Light gray in dark mode
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -110,7 +114,6 @@ export default function PlannerScreen() {
         completed: false
       });
 
-      
       Alert.alert("Success", "Session Scheduled!");
       setSelectedSubject(null);
     } catch (error) {
@@ -144,27 +147,30 @@ export default function PlannerScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 p-4">
-      <Text className="text-2xl font-bold text-gray-800 mb-6">Study Planner</Text>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900 p-4">
+      <Text className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Study Planner</Text>
 
-      <View className="bg-white p-4 rounded-2xl shadow-sm mb-6">
-        <Text className="text-gray-500 font-bold mb-2">SCHEDULE NEW SESSION</Text>
+      {/* --- CREATE NEW SESSION CARD --- */}
+      <View className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm mb-6">
+        <Text className="text-gray-500 dark:text-gray-400 font-bold mb-2">SCHEDULE NEW SESSION</Text>
         
+        {/* Subject Selector */}
         <TouchableOpacity 
           onPress={() => setSubjectModalVisible(true)}
-          className="bg-gray-100 p-4 rounded-xl mb-3 border border-gray-200"
+          className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl mb-3 border border-gray-200 dark:border-gray-600"
         >
-          <Text className={selectedSubject ? "text-black" : "text-gray-400"}>
+          <Text className={selectedSubject ? "text-black dark:text-white" : "text-gray-400 dark:text-gray-500"}>
             {selectedSubject ? selectedSubject.name : "Select a Subject..."}
           </Text>
         </TouchableOpacity>
 
+        {/* Date Picker Trigger */}
         <TouchableOpacity 
           onPress={() => showDatepicker(date)}
-          className="bg-gray-100 p-4 rounded-xl mb-4 border border-gray-200 flex-row justify-between"
+          className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl mb-4 border border-gray-200 dark:border-gray-600 flex-row justify-between"
         >
-          <Text>{date.toLocaleString()}</Text>
-          <Ionicons name="calendar-outline" size={20} color="gray" />
+          <Text className="text-black dark:text-white">{date.toLocaleString()}</Text>
+          <Ionicons name="calendar-outline" size={20} color={iconColor} />
         </TouchableOpacity>
 
         {showPickerIOS && (
@@ -184,7 +190,10 @@ export default function PlannerScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text className="text-xl font-bold text-gray-800 mb-4">Your Schedule</Text>
+      {/* --- LIST HEADER --- */}
+      <Text className="text-xl font-bold text-gray-800 dark:text-white mb-4">Your Schedule</Text>
+      
+      {/* --- SCHEDULE LIST --- */}
       <FlatList 
         data={sessions}
         keyExtractor={i => i.id}
@@ -196,54 +205,60 @@ export default function PlannerScreen() {
                   setSelectedSession(item);
                   setEditModalVisible(true);
                 }}
-                className={`p-4 mb-3 rounded-xl border flex-row justify-between items-center ${expired ? "bg-gray-100 border-gray-200" : "bg-white border-gray-100"}`}
+                className={`p-4 mb-3 rounded-xl border flex-row justify-between items-center 
+                  ${expired 
+                    ? "bg-gray-100 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700" 
+                    : "bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700" 
+                  }`}
               >
                 <View>
-                  <Text className={`text-lg font-bold ${expired ? "text-gray-400" : "text-blue-600"}`}>
+                  <Text className={`text-lg font-bold ${expired ? "text-gray-400 dark:text-gray-500" : "text-blue-600 dark:text-blue-400"}`}>
                     {item.subjectName} {expired && "(Expired)"}
                   </Text>
-                  <Text className="text-gray-500">
+                  <Text className="text-gray-500 dark:text-gray-400">
                     {new Date(item.date.seconds * 1000).toLocaleString()}
                   </Text>
                 </View>
                 <Ionicons 
                   name={expired ? "alert-circle-outline" : "create-outline"} 
                   size={24} 
-                  color="gray" 
+                  color={iconColor} 
                 />
               </TouchableOpacity>
             );
         }}
       />
 
+      {/* --- SUBJECT SELECTION MODAL --- */}
       <Modal visible={subjectModalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white p-6 rounded-t-3xl h-1/2">
-            <Text className="text-xl font-bold mb-4 text-center">Pick a Subject</Text>
+          <View className="bg-white dark:bg-gray-800 p-6 rounded-t-3xl h-1/2">
+            <Text className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">Pick a Subject</Text>
             <FlatList
               data={subjects}
               keyExtractor={i => i.id}
               renderItem={({ item }) => (
                 <TouchableOpacity 
-                  className="p-4 border-b border-gray-100"
+                  className="p-4 border-b border-gray-100 dark:border-gray-700"
                   onPress={() => { setSelectedSubject(item); setSubjectModalVisible(false); }}
                 >
-                  <Text className="text-lg text-center">{item.name}</Text>
+                  <Text className="text-lg text-center text-gray-800 dark:text-gray-200">{item.name}</Text>
                 </TouchableOpacity>
               )}
             />
-            <TouchableOpacity onPress={() => setSubjectModalVisible(false)} className="mt-4 bg-gray-200 p-4 rounded-xl">
-              <Text className="text-center font-bold">Cancel</Text>
+            <TouchableOpacity onPress={() => setSubjectModalVisible(false)} className="mt-4 bg-gray-200 dark:bg-gray-700 p-4 rounded-xl">
+              <Text className="text-center font-bold text-gray-800 dark:text-white">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
+      {/* --- EDIT/DELETE MODAL --- */}
       <Modal visible={editModalVisible} animationType="fade" transparent>
         <View className="flex-1 justify-center items-center bg-black/50 p-4">
-          <View className="bg-white p-6 rounded-2xl w-full max-w-sm">
-            <Text className="text-xl font-bold mb-2 text-center">Manage Session</Text>
-            <Text className="text-center text-gray-500 mb-6">
+          <View className="bg-white dark:bg-gray-800 p-6 rounded-2xl w-full max-w-sm">
+            <Text className="text-xl font-bold mb-2 text-center text-gray-800 dark:text-white">Manage Session</Text>
+            <Text className="text-center text-gray-500 dark:text-gray-400 mb-6">
               {selectedSession?.subjectName}
             </Text>
 
@@ -260,13 +275,13 @@ export default function PlannerScreen() {
 
             <TouchableOpacity 
               onPress={() => selectedSession && deleteSession(selectedSession.id)}
-              className="bg-red-100 p-4 rounded-xl mb-3"
+              className="bg-red-100 dark:bg-red-900/30 p-4 rounded-xl mb-3"
             >
-              <Text className="text-red-600 text-center font-bold">Delete Session</Text>
+              <Text className="text-red-600 dark:text-red-400 text-center font-bold">Delete Session</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setEditModalVisible(false)} className="p-4">
-              <Text className="text-gray-500 text-center font-bold">Close</Text>
+              <Text className="text-gray-500 dark:text-gray-400 text-center font-bold">Close</Text>
             </TouchableOpacity>
           </View>
         </View>
