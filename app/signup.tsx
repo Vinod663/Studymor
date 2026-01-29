@@ -1,29 +1,39 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Dimensions } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../src/config/firebaseConfig";
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../src/config/firebaseConfig";
+import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
-export default function LoginScreen() {
+export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        createdAt: new Date(),
+        dailyGoal: 60
+      });
+
+      Alert.alert("Success", "Account created!");
       router.replace("/dashboard");
     } catch (error: any) {
-      Alert.alert("Login Failed", error.message);
+      Alert.alert("Sign Up Failed", error.message);
     } finally {
       setLoading(false);
     }
@@ -31,33 +41,32 @@ export default function LoginScreen() {
 
   return (
     <LinearGradient
-      colors={['#111827', '#1e3a8a', '#111827']} 
+      colors={['#111827', '#115e59', '#111827']} 
       style={{ flex: 1 }}
     >
-      {/*Keyboard Wrapper: Pushes content up */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"} 
         style={{ flex: 1 }}
       >
-        {/*ScrollView: Allows sliding if content gets hidden */}
         <ScrollView 
           contentContainerStyle={{ 
             flexGrow: 1, 
             justifyContent: 'center', 
             alignItems: 'center', 
-            paddingHorizontal: 20,
+            paddingHorizontal: 20, 
             paddingBottom: 40 
           }}
           keyboardShouldPersistTaps="handled"
         >
-          
-          {/* LOGO AREA */}
+        
+          {/* HEADER */}
           <Animated.View entering={FadeInUp.delay(200).duration(1000)} style={{ alignItems: 'center', marginBottom: 40 }}>
-            <View className="bg-blue-600/20 p-5 rounded-full mb-4 border border-blue-500/30">
-              <Ionicons name="school" size={60} color="#60a5fa" /> 
+             {/* Teal Icon Background */}
+             <View className="bg-teal-600/20 p-5 rounded-full mb-4 border border-teal-500/30">
+              <Ionicons name="person-add" size={50} color="#2dd4bf" /> 
             </View>
-            <Text className="text-4xl font-bold text-white tracking-wider">Studymor</Text>
-            <Text className="text-gray-400 text-lg mt-2 font-light">Study Smarter, Not Harder</Text>
+            <Text className="text-4xl font-bold text-white">Join Studymor</Text>
+            <Text className="text-gray-400 text-lg mt-2">Start your journey today</Text>
           </Animated.View>
 
           {/* DARK GLASS CARD */}
@@ -65,8 +74,6 @@ export default function LoginScreen() {
             entering={FadeInDown.delay(400).duration(1000)} 
             className="bg-gray-800/90 p-8 rounded-3xl w-full shadow-2xl border border-gray-700"
           >
-            <Text className="text-2xl font-bold text-white mb-6 text-center">Welcome Back</Text>
-
             {/* Email Input */}
             <View className="flex-row items-center bg-gray-700/50 p-4 rounded-xl mb-4 border border-gray-600">
               <Ionicons name="mail-outline" size={20} color="#9ca3af" />
@@ -94,23 +101,23 @@ export default function LoginScreen() {
               />
             </View>
 
-            {/* Login Button */}
+            {/* Sign Up Button (TEAL) */}
             <TouchableOpacity
-              onPress={handleLogin}
+              onPress={handleSignUp}
               disabled={loading}
-              className="bg-blue-600 p-4 rounded-xl items-center shadow-lg active:bg-blue-700 mb-4"
+              className="bg-teal-600 p-4 rounded-xl items-center shadow-lg active:bg-teal-700 mb-4"
             >
               {loading ? (
                 <ActivityIndicator color="white" />
               ) : (
-                <Text className="text-white font-bold text-lg">Log In</Text>
+                <Text className="text-white font-bold text-lg">Create Account</Text>
               )}
             </TouchableOpacity>
 
-            {/* Sign Up Link */}
-            <TouchableOpacity onPress={() => router.push("/signup")} className="mt-2">
+            {/* Back to Login */}
+            <TouchableOpacity onPress={() => router.back()} className="mt-2">
               <Text className="text-gray-400 text-center">
-                Don't have an account? <Text className="text-blue-400 font-bold">Sign Up</Text>
+                Already have an account? <Text className="text-teal-400 font-bold">Log In</Text>
               </Text>
             </TouchableOpacity>
 
