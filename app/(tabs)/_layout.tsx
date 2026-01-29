@@ -12,6 +12,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="timer"
+        options={{
+          title: "Focus",
+          tabBarIcon: ({ color }) => <Ionicons name="stopwatch" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="planner"
         options={{
           title: "Planner",
