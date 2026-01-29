@@ -1,19 +1,23 @@
-import { Text, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; 
-import { signOut } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../src/config/firebaseConfig";
 
 export default function Dashboard() {
+  const [userName, setUserName] = useState("Student");
+
+  useEffect(() => {
+    if (auth.currentUser?.email) {
+      setUserName(auth.currentUser.email.split("@")[0]); 
+    }
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 justify-center items-center bg-white">
-      <Text className="text-xl font-bold mb-4">Welcome to Dashboard</Text>
+      <Text className="text-2xl font-bold mb-2 text-black">Welcome back,</Text>
+      <Text className="text-xl text-blue-600 font-bold mb-8">{userName}!</Text>
       
-      <TouchableOpacity 
-        onPress={() => signOut(auth)} 
-        className="bg-red-500 px-6 py-3 rounded-xl mt-4"
-      >
-        <Text className="text-white font-bold">Log Out</Text>
-      </TouchableOpacity>
+      <Text className="text-gray-400">Select a tab below to start.</Text>
     </SafeAreaView>
   );
 }
