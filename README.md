@@ -95,18 +95,22 @@ Studymor provides students with an intelligent interface to plan sessions, track
 **Analytics Dashboard**
 ![Dashboard Screenshot](https://i.imgur.com/k9bSNUG.jpeg)
 *Real-time weekly progress chart and daily goal tracking.*
+<br><br>
 
 **Focus Timer**
 ![Timer Screenshot](https://i.imgur.com/B0aFFa5.jpeg)
 *Distraction-free timer with subject selection and sound controls.*
+<br><br>
 
 **Planner & Schedule**
 ![Planner Screenshot](https://i.imgur.com/42zv3eZ.jpeg)
 *Session management and future study planning.*
+<br><br>
 
 **Profile & Dark Mode**
 ![Profile Screenshot](https://i.imgur.com/emIz9iC.jpeg)
 *User statistics, history, and theme toggles.*
+<br><br>
 
 ## Deployment
 
