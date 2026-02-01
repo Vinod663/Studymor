@@ -92,25 +92,21 @@ Studymor provides students with an intelligent interface to plan sessions, track
 
 ## Screenshots
 
-**Analytics Dashboard**
-![Dashboard Screenshot](https://i.imgur.com/k9bSNUG.jpeg)
-*Real-time weekly progress chart and daily goal tracking.*
-<br><br>
+| **Analytics Dashboard** | **Focus Timer** |
+|:---:|:---:|
+| <img src="https://i.imgur.com/k9bSNUG.jpeg" width="300" /> | <img src="https://i.imgur.com/B0aFFa5.jpeg" width="300" /> |
+| *Real-time weekly progress & goals* | *Distraction-free focus timer* |
 
-**Focus Timer**
-![Timer Screenshot](https://i.imgur.com/B0aFFa5.jpeg)
-*Distraction-free timer with subject selection and sound controls.*
-<br><br>
+| **Planner & Schedule** | **Profile & Settings** |
+|:---:|:---:|
+| <img src="https://i.imgur.com/42zv3eZ.jpeg" width="300" /> | <img src="https://i.imgur.com/emIz9iC.jpeg" width="300" /> |
+| *Session management & planning* | *User stats & dark mode toggle* |
 
-**Planner & Schedule**
-![Planner Screenshot](https://i.imgur.com/42zv3eZ.jpeg)
-*Session management and future study planning.*
-<br><br>
+| **Secure Login** | **New Account** |
+|:---:|:---:|
+| <img src="https://i.imgur.com/8yFqADq.jpeg" width="300" /> | <img src="https://i.imgur.com/qEpZ9fO.jpeg" width="300" /> |
+| *Blue-themed secure login* | *Teal-themed registration* |
 
-**Profile & Dark Mode**
-![Profile Screenshot](https://i.imgur.com/emIz9iC.jpeg)
-*User statistics, history, and theme toggles.*
-<br><br>
 
 ## Deployment
 
