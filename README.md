@@ -1,50 +1,119 @@
-# Welcome to your Expo app 👋
+# Studymor
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A comprehensive mobile study companion application. A modern, responsive React Native application built with **Expo**, featuring a focus-centric design, real-time analytics, and a seamless cross-platform user experience.
 
-## Get started
+## 📥 Download Android App
 
-1. Install dependencies
+**Try it now on your device!**
+You can download the latest APK file directly from this repository:
 
-   ```bash
-   npm install
-   ```
+👉 **[Download Studymor.apk](./release/studymor.apk)**
 
-2. Start the app
+*(Note: If you get a security warning during installation, select "Install Anyway" as this is a developer build.)*
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## Project Overview
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Studymor provides students with an intelligent interface to plan sessions, track focus time, and manage subjects. The app connects to **Firebase** to provide real-time data synchronization, persistent user authentication, and cloud-based analytics.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+**Main Features:**
+* **Smart Dashboard:** Visualizes study habits with an interactive Line Chart (last 7 days), "Daily Goal" progress bar, and dynamic greetings based on the time of day.
+* **Focus Timer:** A customizable Pomodoro-style timer with selectable subjects and background ringtones (e.g., Classic Alarm, Soft Chime) to enhance concentration.
+* **Study Planner:** A scheduling system where users can book future study sessions with specific subjects and time slots.
+* **Profile Hub & Analytics:**
+    * **Dark Mode:** A system-wide toggle (Light/Dark themes) using NativeWind.
+    * **Statistics:** Real-time tracking of total study hours and session counts.
+    * **Profile Customization:** Upload and manage profile pictures.
+* **Motivational Engine:** Fetches daily motivational quotes from an external API to keep users inspired.
+* **Secure Authentication:** Robust Login and Sign-Up flows with Gradient aesthetics, Glassmorphism cards, and smooth entry animations.
 
-## Get a fresh project
+## Technologies & Tools
 
-When you're ready, run:
+* **Core:** React Native (Expo SDK 52), TypeScript
+* **Styling:** NativeWind (Tailwind CSS for React Native)
+* **State Management:** React Hooks & Context
+* **Routing:** Expo Router (File-based routing)
+* **Authentication:** Firebase Auth (Persistent state with AsyncStorage)
+* **Database:** Cloud Firestore
+* **Visualization:** React Native Chart Kit
+* **Animations:** React Native Reanimated
+* **Icons:** Ionicons (@expo/vector-icons)
+* **Audio:** Expo AV
 
-```bash
-npm run reset-project
-```
+## Prerequisites
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+* Node.js (v18 or higher)
+* npm or yarn
+* Expo Go app (on iOS or Android for testing)
 
-## Learn more
+## Installation & Setup
 
-To learn more about developing your project with Expo, look at the following resources:
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository_url>
+    cd studymor
+    ```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-## Join the community
+3.  **Environment Configuration:**
+    Create a `.env` file in the root directory to connect your Firebase project.
+    > **Note:** Do not commit this file to version control.
 
-Join our community of developers creating universal apps.
+    ```env
+    EXPO_PUBLIC_FIREBASE_API_KEY=your_api_key
+    EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+    EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+    EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
+    EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+    EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
+    ```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+4.  **Run the application:**
+    ```bash
+    npx expo start -c
+    ```
+    Scan the QR code with the **Expo Go** app on your Android or iOS device.
+
+## Application Architecture
+
+* **`/app`**: Main application routes and screens (File-based routing).
+    * **`/(tabs)`**: The main tab navigator (Dashboard, Focus, Planner, Subjects, Profile).
+    * **`index.tsx`**: The Login screen.
+    * **`signup.tsx`**: The Registration screen.
+* **`/src/config`**: Configuration files (Firebase initialization).
+* **`/components`**: Reusable UI elements (ThemedView, ThemedText, etc.).
+* **`/assets`**: Static assets like images, fonts, and sounds.
+* **`/release`**: Contains the compiled Android APK file.
+
+## Screenshots
+
+**Analytics Dashboard**
+![Dashboard Screenshot](https://i.imgur.com/k9bSNUG.jpeg)
+*Real-time weekly progress chart and daily goal tracking.*
+
+**Focus Timer**
+![Timer Screenshot](https://i.imgur.com/B0aFFa5.jpeg)
+*Distraction-free timer with subject selection and sound controls.*
+
+**Planner & Schedule**
+![Planner Screenshot](https://i.imgur.com/42zv3eZ.jpeg)
+*Session management and future study planning.*
+
+**Profile & Dark Mode**
+![Profile Screenshot](https://i.imgur.com/emIz9iC.jpeg)
+*User statistics, history, and theme toggles.*
+
+## Deployment
+
+* **Build Tool:** EAS (Expo Application Services)
+* **Platform:** Android (APK) & iOS
+
+### Important Development Notes
+1.  **Auth Persistence:** The app uses `@react-native-async-storage/async-storage` to persist Firebase sessions, ensuring users stay logged in after restarting the app.
+2.  **NativeWind:** Styling is handled via utility classes. Ensure `tailwind.config.js` is updated if you add new folders containing UI components.
+3.  **Expo Go Caching:** If you change the App Icon or Splash screen, you may need to clear the Expo Go app data/cache on your device to see the changes immediately.
